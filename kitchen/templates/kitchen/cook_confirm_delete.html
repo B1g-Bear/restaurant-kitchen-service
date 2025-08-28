@@ -1,0 +1,13 @@
+{% extends "kitchen/base.html" %}
+
+{% block title %}Видалити кухаря{% endblock %}
+
+{% block content %}
+<h1>Видалити кухаря</h1>
+<p>Ви впевнені, що хочете видалити кухаря: <strong>{{ object.first_name }} {{ object.last_name }}</strong>?</p>
+<form method="post" class="d-flex gap-2">
+    {% csrf_token %}
+    <a href="{% url 'cook_list' %}" class="btn btn-secondary">Скасувати</a>
+    <button type="submit" class="btn btn-danger">Видалити</button>
+</form>
+{% endblock %}

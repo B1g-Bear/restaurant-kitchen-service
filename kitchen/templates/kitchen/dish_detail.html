@@ -1,0 +1,80 @@
+{% extends "kitchen/base.html" %}
+
+{% block title %}Деталі страви{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-center">Деталі страви</h1>
+
+<div class="d-flex justify-content-center mb-3">
+    <a href="{% url 'dish_list' %}" class="btn btn-secondary me-2">Список страв</a>
+    <a href="{% url 'home' %}" class="btn btn-secondary">На головну</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">{{ dish.name|default:"Немає назви" }}</h5>
+        <p class="card-text"><strong>Опис:</strong> {{ dish.description|default:"Немає опису" }}</p>
+        <p class="card-text"><strong>Тип:</strong> {{ dish.dish_type.name|default:"—" }}</p>
+        <p class="card-text"><strong>Ціна:</strong> {{ dish.price|default:"—" }} грн</p>
+        <p class="card-text"><strong>Можна приготувати (шт.):</strong> {{ dish.max_possible|default:"—" }}</p>
+    </div>
+</div>
+
+<h3 class="mb-3 text-center">Кухарі, які можуть приготувати</h3>
+<div class="table-responsive mb-4">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Ім'я</th>
+                <th>Прізвище</th>
+                <th>Email</th>
+                <th>Досвід (років)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cook in dish.cooks.all %}
+            <tr>
+                <td><a href="{% url 'cook_detail' cook.pk %}">{{ cook.first_name }}</a></td>
+                <td>{{ cook.last_name }}</td>
+                <td>
+                    {% if cook.email %}
+                        <a href="mailto:{{ cook.email }}">{{ cook.email }}</a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>{{ cook.years_of_experience|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">Немає кухарів для цієї страви</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3 class="mb-3 text-center">Інгредієнти</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Назва</th>
+                <th>Кількість</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for di in dish.dishingredient_set.all %}
+            <tr>
+                <td>{{ di.ingredient.name|default:"—" }}</td>
+                <td>{{ di.amount|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center text-muted">Інгредієнтів немає</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

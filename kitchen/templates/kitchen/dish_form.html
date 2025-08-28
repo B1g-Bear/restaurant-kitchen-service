@@ -1,0 +1,69 @@
+{% extends "kitchen/base.html" %}
+{% load form_tags %}
+
+{% block title %}
+{{ form.instance.pk|yesno:"Редагувати страву,Додати страву" }}
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{{ form.instance.pk|yesno:"Редагувати страву,Додати страву" }}</h1>
+
+<form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+
+    <!-- Основна форма страви -->
+    {% for field in form %}
+        <div class="mb-3">
+            {{ field.label_tag }}
+            {{ field|add_class:"form-control" }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <!-- Formset інгредієнтів -->
+    <h5>Інгредієнти</h5>
+    {{ formset.management_form }}
+    {% for subform in formset %}
+        <div class="row mb-3 align-items-end">
+            <div class="col">
+                {{ subform.ingredient.label_tag }}
+                {{ subform.ingredient|add_class:"form-select" }}
+                {% if subform.ingredient.errors %}
+                    {% for error in subform.ingredient.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col">
+                {{ subform.amount.label_tag }}
+                {{ subform.amount|add_class:"form-control" }}
+                {% if subform.amount.errors %}
+                    {% for error in subform.amount.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                {% if subform.instance.pk %}
+                    <label class="form-label d-block">&nbsp;</label>
+                    {{ subform.DELETE }}
+                    <span class="form-check-label">Видалити</span>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'dish_list' %}" class="btn btn-secondary">Назад</a>
+        <button type="submit" class="btn btn-primary">
+            {{ form.instance.pk|yesno:"Оновити,Додати" }}
+        </button>
+    </div>
+</form>
+{% endblock %}
