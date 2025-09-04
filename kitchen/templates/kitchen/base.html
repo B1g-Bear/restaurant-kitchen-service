@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kitchen App{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("{% static 'kitchen/images/fon.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .navbar {
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .content-container {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            color: #fff;
+        }
+        .content-container a {
+            color: #222;
+        }
+        .content-container a:hover {
+            color: #555;
+            text-decoration: underline;
+        }
+        .navbar a {
+            color: #ffc107;
+        }
+        .navbar a:hover {
+            color: #fff;
+        }
+        table th, table td {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'home' %}">🍳 Kitchen</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'dish' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dish_list' %}">Страви</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'cook' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'cook_list' %}">Кухарі</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container content-container">
+    {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
